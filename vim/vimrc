@@ -1,0 +1,138 @@
+" vim-plug plugin manager
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+call plug#end()
+
+autocmd FileType python set commentstring=#\ %s
+
+" Map F7 to toggle NERDTree
+nnoremap <silent> <F7> :NERDTreeToggle<CR>
+" tell nerdtree to ignore .pyc binary files.
+let NERDTreeIgnore=['\.pyc$', '\.pyo$']
+
+if has("unix")
+  set backupdir=~/.vim/backupdir
+  set dir=~/.vim/backupdir
+endif
+
+" This tip is from http://vim.wikia.com/wiki/VimTip294 , it maps C-s to save.
+if has("gui_running")
+  " If the current buffer has never been saved, it will have no name,
+  " call the file browser to save it, otherwise just save it.
+  :map <silent> <C-S> :if expand("%") == ""<CR>:browse confirm w<CR>:else<CR>:confirm w<CR>:endif<CR>
+endif
+" Return to insert mode after saving.
+imap <c-s> <c-o><c-s>
+
+" We don't want no compatibility with vi
+set nocompatible
+
+" If using a dark background within the editing area and syntax highlighting
+" turn on this option as well
+set background=dark
+
+syntax on
+
+set showcmd " Show (partial) command in status line.
+set showmatch " Show matching brackets.
+set ignorecase " Do case insensitive matching
+set smartcase " Do smart case matching
+set incsearch " Incremental search
+set autowrite " Automatically save before commands like :next and :make
+
+" Number of spaces a tab should be.
+set tabstop=4
+" Number of spaces used for indentation.
+set shiftwidth=4
+" Use space instead of tabs.
+set expandtab
+" insert tabs at the beginning of a line
+set smarttab
+
+set autoread " read open files again when changed outside Vim
+set browsedir =current " which directory to use for the file browser
+set visualbell " visual bell instead of beeping
+filetype plugin indent on
+" highlight current line
+set cursorline
+" Break lines longer than 80. (wrap option only displays it but doesn't insert
+" breaks. textwidth option does the insertion automatically).
+set textwidth=80
+" Changed my mind, wrap long lines but do not insert breaks.
+" linebreak prevents breaking at the middle of a word, textwidth disables the
+" maximum line length setting.
+set wrap linebreak textwidth=0
+
+" Highlight searched words
+set hlsearch
+
+" <Ctrl-l> redraws the screen and removes any search highlighting.
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+
+" Stop vim continuing comments.
+set formatoptions-=ql
+
+" Make python fold according to the indentation.
+set foldmethod=indent
+" Set foldlevelstart to a high number so that folds are open by default.
+set foldlevelstart=20
+
+" Removes trailing whitespaces when a file is saved.
+" See: http://vim.wikia.com/wiki/Remove_unwanted_spaces
+" Previously this was done only on Python source files, now everywhere.
+" Note sure why but I have to add python here otherwise it does works only
+" for the first opened file in a window.
+autocmd FileType python autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+
+" 1. Use gvim's menu to set your desired font.
+" 2. After font is rendered, use "set gfn?" to see its name.
+" 3. Add that name below to make it default font. Escape space characters.
+" set gfn=DejaVu\ Sans\ Mono\ 12
+
+" Set wildignore to ignore .pyc and .pyo files.
+set wildignore+=*/.git/*,*/.hg/*,*.so,*.pyc,*.pyo
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
+
+let g:ctrlp_custom_ignore = {
+	\ 'dir':  'uploads$\|\.hg$\|\.git$',
+	\ 'file': '\.exe$\|\.so$\|\.dll$',
+	\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+	\ }
+
+" Disables indentation checks where flakes8 want you to start below
+" continuation line from the parenthesis above it.
+" Never mind, let it use ~/config/flake8
+" let g:syntastic_python_checker_args = "--ignore=E128,E126,"
+
+" Remove menu options so that there's more room for text.
+":set guioptions-=m  "remove menu bar
+":set guioptions-=T  "remove toolbar
+
+" Stop pretending that vim packages have ruler set and actually set it.
+" Note that Mac doesn't have this by default so it is mandatory there.
+set ruler
+
+" So that Shift-Click on a word searches forward.
+set mousemodel=extend
+" map <c-f> :call JsBeautify()<cr>
+" Or better yet, use jq :)
+map <c-f> :%!jq '.'<cr>
+" or
+autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType json setlocal shiftwidth=2 tabstop=2
+" for html
+autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
+" for css or scss
+autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()<cr>
+
+colorscheme darkblue
