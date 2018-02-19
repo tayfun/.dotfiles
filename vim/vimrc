@@ -1,7 +1,15 @@
 " vim-plug plugin manager
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+" Shorthand notation; fetches from github.com/$plugin
+Plug 'ctrlpvim/ctrlp.vim'
+" On-demand loading
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tpope/vim-commentary'
+Plug 'henrik/vim-indexed-search'
+Plug 'ervandew/supertab'
+Plug 'tomasr/molokai'
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'w0rp/ale'
 call plug#end()
 
 autocmd FileType python set commentstring=#\ %s
@@ -102,15 +110,10 @@ if has("autocmd")
 endif
 
 let g:ctrlp_custom_ignore = {
-	\ 'dir':  'uploads$\|\.hg$\|\.git$',
+	\ 'dir':  'uploads$\|\.hg$\|\.git$\|node_modules$',
 	\ 'file': '\.exe$\|\.so$\|\.dll$',
 	\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
 	\ }
-
-" Disables indentation checks where flakes8 want you to start below
-" continuation line from the parenthesis above it.
-" Never mind, let it use ~/config/flake8
-" let g:syntastic_python_checker_args = "--ignore=E128,E126,"
 
 " Remove menu options so that there's more room for text.
 ":set guioptions-=m  "remove menu bar
@@ -136,3 +139,11 @@ autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()<cr>
 
 colorscheme darkblue
+
+" Ale linter settings. For fast jumping between errors.
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" Don't run every time text is changed.
+let g:ale_lint_on_text_changed = 'never'
+" Don't run on opening the file.
+let g:ale_lint_on_enter = 0
