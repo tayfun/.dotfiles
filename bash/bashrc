@@ -71,7 +71,11 @@ alias l='ls -CF'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-alias open=xdg-open
+
+# If this is Linux (and `xdg-open` exists), alias it.
+if [ -x "$(command -v xdg-open)" ]; then
+    alias open='xdg-open'
+fi
 
 
 # Alias definitions.
@@ -97,12 +101,18 @@ fi
 # Change PS1
 . ~/.dotfiles/bash/bash_prompt.sh
 
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
 export WORKON_HOME=~/.virtualenvs/
-export VIRTUALENVWRAPPER_PYTHON=/home/tayfun/.pyenv/shims/python
-source /home/tayfun/.pyenv/versions/3.6.3/bin/virtualenvwrapper.sh
+# TODO: Change this to the Python version where virtualenvwrapper is installed.
+# The wrapper will work with all Python versions virtualenv is installed.
+if [ -f $HOME/.pyenv/versions/2.7.14/bin/virtualenvwrapper.sh ]; then
+    source $HOME/.pyenv/versions/2.7.14/bin/virtualenvwrapper.sh
+fi
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # fzf and ripgrep configuration
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -110,3 +120,10 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 bind -x '"\C-p": vim $(fzf);'
 
+# Assuming MacVim installed via the official website.
+alias gvim='/Applications/MacVim.app/Contents/bin/mvim'
+
+# Put individual/specific config in .profile and source it here.
+if [ -f ~/.profile ]; then
+    source ~/.profile
+fi
