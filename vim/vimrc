@@ -98,6 +98,7 @@ autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:va
 " 2. After font is rendered, use "set gfn?" to see its name.
 " 3. Add that name below to make it default font. Escape space characters.
 " set gfn=DejaVu\ Sans\ Mono\ 12
+set gfn=Menlo\ Regular:h16
 
 " Set wildignore to ignore .pyc and .pyo files.
 set wildignore+=*/.git/*,*/.hg/*,*.so,*.pyc,*.pyo
