@@ -91,7 +91,7 @@ set foldlevelstart=20
 " Previously this was done only on Python source files, now everywhere.
 " Note sure why but I have to add python here otherwise it does works only
 " for the first opened file in a window.
-autocmd FileType python autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+autocmd FileType python,yaml,js autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
 " 1. Use gvim's menu to set your desired font.
@@ -111,8 +111,8 @@ if has("autocmd")
 endif
 
 let g:ctrlp_custom_ignore = {
-	\ 'dir':  'uploads$\|\.hg$\|\.git$\|node_modules$',
-	\ 'file': '\.exe$\|\.so$\|\.dll$',
+	\ 'dir':  'uploads$\|\.hg$\|\.git$\|node_modules$\|build$',
+	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.png$\|\.jpg',
 	\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
 	\ }
 
@@ -134,6 +134,7 @@ autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 autocmd FileType json setlocal shiftwidth=2 tabstop=2
+autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 " for html
 autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
 " for css or scss
@@ -148,3 +149,38 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_lint_on_text_changed = 'never'
 " Don't run on opening the file.
 let g:ale_lint_on_enter = 0
+
+" Set lines and columns to very large so vim will use the whole screen
+set lines=9999 columns=9999
+
+augroup GetAbbrev
+    autocmd!
+    autocmd VimEnter * let s:abbrev_list = [] |
+                \ call substitute(join(readfile($MYVIMRC), "\n"), '\v%(^|\n)\s*i?%(nore)?ab%[brev]\s+%(%(\<expr\>|\<buffer\>)\s+){,2}(\k+)', '\=add(s:abbrev_list, submatch(1))', 'gn')
+augroup END
+
+set completefunc=CompleteAbbrev
+function! CompleteAbbrev(findstart, base)
+    if a:findstart
+        return searchpos('\<\k', 'bcnW', line('.'))[1] - 1
+    else
+        return filter(copy(s:abbrev_list), 'v:val =~ "^" . a:base')
+    endif
+endfunction
+ab ipdb import ipdb; ipdb.set_trace()
+
+" See :ALEFixSuggest for other fixers
+let g:ale_fixers = {
+\   'javascript': ['eslint', 'remove_trailing_lines', 'trim_whitespace'],
+\}
+
+" Only enable eslint as linters might have conflicting world views
+" eg. semicolon used or omitted?
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+
+" Show which linter is used and if error or warning
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'

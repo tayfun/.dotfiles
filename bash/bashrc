@@ -67,6 +67,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias gti=git
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -110,15 +111,11 @@ export WORKON_HOME=~/.virtualenvs/
 # The wrapper will work with all Python versions virtualenv is installed.
 if [ -f $HOME/.pyenv/versions/2.7.14/bin/virtualenvwrapper.sh ]; then
     source $HOME/.pyenv/versions/2.7.14/bin/virtualenvwrapper.sh
+    if ! [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+        ln -s $HOME/.pyenv/versions/2.7.14/bin/virtualenvwrapper.sh /usr/local/bin/virtualenvwrapper.sh
+    fi
 fi
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-# fzf and ripgrep configuration
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-bind -x '"\C-p": vim $(fzf);'
 
 # Assuming MacVim installed via the official website.
 alias gvim='/Applications/MacVim.app/Contents/bin/mvim'
@@ -127,3 +124,30 @@ alias gvim='/Applications/MacVim.app/Contents/bin/mvim'
 if [ -f ~/.profile ]; then
     source ~/.profile
 fi
+
+alias wip='git commit -am WIP'
+alias squish='git status && git commit -a --amend -C HEAD'
+
+
+export PATH="/usr/local/opt/redis@2.8/bin:$PYENV_ROOT/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
+
+# If this is Mac and `greadlink` exists (brew install otherwise), alias it.
+# `readlink -f somefile` will print the absolute path of that file.
+if [ -x "$(command -v greadlink)" ]; then
+    alias readlink='greadlink'
+fi
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+
+
+# So gnu tools are used instead of Mac ones.
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/coreutils/libexec/gnuman:${MANPATH-/usr/share/man}"
+export MANPATH
+
+# Add locally installed node binaries to path
+PATH="./node_modules/.bin/:$PATH"
