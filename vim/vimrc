@@ -10,6 +10,7 @@ Plug 'ervandew/supertab'
 Plug 'tomasr/molokai'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'w0rp/ale'
+Plug 'vim-scripts/vis'
 call plug#end()
 
 autocmd FileType python set commentstring=#\ %s
@@ -170,17 +171,22 @@ endfunction
 ab ipdb import ipdb; ipdb.set_trace()
 
 " See :ALEFixSuggest for other fixers
+" black removed because too obstrusive for legacy codebase
+"  'python': ['isort', 'black'],
 let g:ale_fixers = {
 \   'javascript': ['eslint', 'remove_trailing_lines', 'trim_whitespace'],
+\   'python': ['isort'],
 \}
 
 " Only enable eslint as linters might have conflicting world views
 " eg. semicolon used or omitted?
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'python': ['flake8'],
 \}
 
 " Show which linter is used and if error or warning
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let b:ale_fix_on_save = 1
