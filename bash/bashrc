@@ -121,15 +121,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export MANPATH
 fi
 
-# Put individual/specific config in .profile and source it here.
-if [ -f ~/.profile ]; then
-    source ~/.profile
-fi
-
 alias wip='git commit -am WIP'
 alias squish='git status && git commit -a --amend -C HEAD'
-
-
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
