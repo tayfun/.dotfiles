@@ -156,9 +156,6 @@ let g:ale_lint_on_text_changed = 'never'
 " Don't run on opening the file.
 let g:ale_lint_on_enter = 0
 
-" Set lines and columns to very large so vim will use the whole screen
-set lines=9999 columns=9999
-
 augroup GetAbbrev
     autocmd!
     autocmd VimEnter * let s:abbrev_list = [] |
