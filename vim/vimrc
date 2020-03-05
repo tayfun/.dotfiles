@@ -18,7 +18,7 @@ autocmd FileType python set commentstring=#\ %s
 " Map F7 to toggle NERDTree
 nnoremap <silent> <F7> :NERDTreeToggle<CR>
 " tell nerdtree to ignore .pyc binary files.
-let NERDTreeIgnore=['\.pyc$', '\.pyo$']
+let NERDTreeIgnore=['\.pyc$', '\.pyo$', '__pycache__']
 
 if has("unix")
   set backupdir=~/.vim/backupdir
