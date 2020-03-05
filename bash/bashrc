@@ -139,3 +139,10 @@ export PATH="/usr/local/opt/openssl/bin:$PATH"
 
 # Add locally installed node binaries to path
 PATH="./node_modules/.bin/:$PATH"
+
+# chruby stuff. see: https://www.engineyard.com/blog/how-to-install-ruby-on-a-mac-with-chruby-rbenv-or-rvm
+# source /usr/local/opt/chruby/share/chruby/chruby.sh
+# source /usr/local/opt/chruby/share/chruby/auto.sh
+
+# Use gnu grep by default
+PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
